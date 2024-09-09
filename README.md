@@ -2,6 +2,8 @@
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/Blis204/WebDavBackup)
 
+![a-cute-cartoon-furry-wolf-with-a-green-hat-is-stan-fTmkbn_1QjCo_DUbPYsLrw-HTQGY0TKQkKdFQ277HeafA](https://github.com/user-attachments/assets/c0d3e8ed-a578-44b9-9f4c-f961ad2e146c)
+
 # WebDavBackup
 
 **WebDavBackup** is a Minecraft plugin with which you can easily create backups and upload them directly to your server trough WebDAV
@@ -13,6 +15,7 @@
 - [x] Custom Folders
 - [x] Progress bar
 - [ ] Upload progress bar
+
 - [ ] Scheduled uploads
 
 ## Installation
