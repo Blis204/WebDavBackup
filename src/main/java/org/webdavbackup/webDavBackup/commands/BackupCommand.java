@@ -44,7 +44,7 @@ public class BackupCommand implements CommandExecutor {
             String webDAVUrl = config.getString("webdav-url");
             String webDAVUsername = config.getString("webdav-username");
             String webDAVPassword = config.getString("webdav-password");
-            this.webDAVUtils = new WebDavUtils(this.plugin, webDAVUrl, webDAVUsername, webDAVPassword);
+            this.webDAVUtils = new WebDavUtils(webDAVUrl, webDAVUsername, webDAVPassword);
         }
     }
 
@@ -106,7 +106,7 @@ public class BackupCommand implements CommandExecutor {
 
                     // Upload the backup file to the WebDAV server
                     if (webDAVUtils != null) {
-                        webDAVUtils.uploadFile(zipFile, player);
+                        webDAVUtils.uploadFile(zipFile);
                         webDAVUtils.deleteOldBackups(directoryName);
                     }
 
