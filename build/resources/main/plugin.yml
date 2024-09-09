@@ -1,0 +1,12 @@
+name: WebDavBackup
+version: '1.0-SNAPSHOT'
+main: org.webdavbackup.webDavBackup.WebDavBackup
+api-version: '1.20'
+commands:
+  uwu:
+    description: Says uwu in chat
+    usage: /<command>
+  backup:
+    description: Creates a backup of the server
+    usage: /backup
+    permission: myPlugin.backup
