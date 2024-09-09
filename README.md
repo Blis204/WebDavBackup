@@ -1,4 +1,4 @@
-# ⚠️ Still in early Development
+### ⚠️ Still in early Development
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/Blis204/WebDavBackup)
 
@@ -10,13 +10,13 @@
 
 ## Features
 
-- [x] Backup Creating
-- [x] Backup Uploading (Pre-Alpha)
-- [x] Custom Folders
-- [x] Progress bar
-- [ ] Upload progress bar
-
-- [ ] Scheduled uploads
+- [x] Backup Creation 📦
+- [x] Backup Uploading (Beta) 📤
+- [x] Folder Config 📁
+- [x] Realtime Progress Bar ⏳
+- [ ] Scheduled Uploads 🕒
+- [ ] Delete Local Backups 🗑️
+- [ ] Set How Many Backups to Keep on Server and Client Side ⚙️
 
 ## Installation
 
