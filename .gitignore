@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/windows,intellij,java
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,intellij,java
+# Created by https://www.toptal.com/developers/gitignore/api/maven,gradle,visualstudiocode,intellij,java
+# Edit at https://www.toptal.com/developers/gitignore?templates=maven,gradle,visualstudiocode,intellij,java
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -140,30 +140,67 @@ fabric.properties
 hs_err_pid*
 replay_pid*
 
-### Windows ###
-# Windows thumbnail cache files
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
 
-# Dump file
-*.stackdump
+# Eclipse m2e generated files
+# Eclipse Core
+.project
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
 
-# Folder config file
-[Dd]esktop.ini
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# Local History for Visual Studio Code
+.history/
 
-# Windows Installer files
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
+# Built Visual Studio Code Extensions
+*.vsix
 
-# Windows shortcuts
-*.lnk
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,intellij,java
+### Gradle ###
+.gradle
+**/build/
+!src/**/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+
+# Cache of project
+.gradletasknamecache
+
+# Eclipse Gradle plugin generated files
+# Eclipse Core
+# JDT-specific (Eclipse Java Development Tools)
+
+### Gradle Patch ###
+# Java heap dump
+*.hprof
+
+# End of https://www.toptal.com/developers/gitignore/api/maven,gradle,visualstudiocode,intellij,java
