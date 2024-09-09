@@ -1,9 +1,10 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'org.webdavbackup'
-version = '1.0-SNAPSHOT'
+version = '1.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -19,7 +20,16 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
+    implementation 'com.github.lookfirst:sardine:5.10'
 }
+
+shadowJar {
+    relocate 'com.github.sardine', 'org.webdavbackup.webDavBackup.shaded.com.github.sardine'
+}
+
+build.dependsOn shadowJar
+
+
 
 def targetJavaVersion = 17
 java {
@@ -47,3 +57,5 @@ processResources {
         expand props
     }
 }
+
+

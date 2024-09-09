@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.webdavbackup.webDavBackup.utils.WebDavUtils;
 
 import java.io.*;
 import java.nio.file.*;
@@ -26,10 +27,25 @@ public class BackupCommand implements CommandExecutor {
 
     private final JavaPlugin plugin;
     private List<String> backupDirectories;
+    private WebDavUtils webDAVUtils;
 
     public BackupCommand(JavaPlugin plugin) {
         this.plugin = plugin;
         loadBackupDirectories();
+        initWebDAVUtils();
+    }
+
+    private void initWebDAVUtils() {
+        File configFile = new File(plugin.getDataFolder(), "config.yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+
+        boolean enableWebDAV = config.getBoolean("enable-webdav", false);
+        if (enableWebDAV) {
+            String webDAVUrl = config.getString("webdav-url");
+            String webDAVUsername = config.getString("webdav-username");
+            String webDAVPassword = config.getString("webdav-password");
+            this.webDAVUtils = new WebDavUtils(this.plugin, webDAVUrl, webDAVUsername, webDAVPassword);
+        }
     }
 
     private void loadBackupDirectories() {
@@ -51,6 +67,10 @@ public class BackupCommand implements CommandExecutor {
             configFile.createNewFile();
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
             config.set("backup-directories", Arrays.asList("world", "plugins"));
+            config.set("enable-webdav", false);
+            config.set("webdav-url", "https://your-webdav-server.com/path/");
+            config.set("webdav-username", "your_username");
+            config.set("webdav-password", "your_password");
             config.save(configFile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -84,9 +104,18 @@ public class BackupCommand implements CommandExecutor {
                     File zipFile = new File(plugin.getDataFolder(), String.format("%s_backup_%s.zip", directoryName, getTimestamp()));
                     backupDirectory(directory, zipFile, currentBossBar);
 
+                    // Upload the backup file to the WebDAV server
+                    if (webDAVUtils != null) {
+                        webDAVUtils.uploadFile(zipFile, player);
+                        webDAVUtils.deleteOldBackups(directoryName);
+                    }
+
                     // Update the player on the main thread
                     Bukkit.getScheduler().runTask(plugin, () -> {
-                        player.sendMessage(String.format("Directory '%s' has been backed up successfully.", directoryName));
+                        player.sendMessage(String.format("Directory §l%s§r has been backed up successfully.", directoryName));
+                        if (webDAVUtils != null) {
+                            player.sendMessage(String.format("Backup for §l%s§r has been uploaded to WebDAV.", directoryName));
+                        }
                         currentBossBar.setProgress(1.0);
                         currentBossBar.setTitle("Backup Complete");
                         currentBossBar.setVisible(false);
