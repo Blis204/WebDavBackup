@@ -17,6 +17,7 @@
 - [ ] Scheduled Uploads 🕒
 - [ ] Delete Local Backups 🗑️
 - [ ] Set How Many Backups to Keep on Server and Client Side ⚙️
+- [ ] Reload Command 🔄
 
 ## Installation
 
