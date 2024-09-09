@@ -103,16 +103,17 @@ public class BackupCommand implements CommandExecutor {
 
                     File zipFile = new File(plugin.getDataFolder(), String.format("%s_backup_%s.zip", directoryName, getTimestamp()));
                     backupDirectory(directory, zipFile, currentBossBar);
-
+                    player.sendMessage(String.format("Directory §l%s§r has been backed up successfully.", directoryName));
                     // Upload the backup file to the WebDAV server
                     if (webDAVUtils != null) {
+                        currentBossBar.setTitle("Uploading...");
                         webDAVUtils.uploadFile(zipFile);
                         webDAVUtils.deleteOldBackups(directoryName);
                     }
 
                     // Update the player on the main thread
                     Bukkit.getScheduler().runTask(plugin, () -> {
-                        player.sendMessage(String.format("Directory §l%s§r has been backed up successfully.", directoryName));
+
                         if (webDAVUtils != null) {
                             player.sendMessage(String.format("Backup for §l%s§r has been uploaded to WebDAV.", directoryName));
                         }

@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'org.webdavbackup'
-version = 'v1.0.0-alpha'
+version = 'v1.1.0-beta'
 
 repositories {
     mavenCentral()
