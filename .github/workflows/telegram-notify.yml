@@ -1,0 +1,20 @@
+name: Telegram Notification
+on: [push, pull_request, release]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Telegram Message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ github.actor }} made a ${{ github.event_name }} to ${{ github.repository }}
+            
+            Commit message: ${{ github.event.head_commit.message }}
+            
+            Repository: ${{ github.repository }}
+            
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
