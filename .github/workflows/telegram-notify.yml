@@ -1,5 +1,14 @@
 name: Telegram Notification
-on: [push, pull_request, release, star]
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    types: [opened, reopened, closed]
+  release:
+    types: [published]
+  watch:
+    types: [started]
 
 jobs:
   notify:
@@ -11,10 +20,10 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            ${{ github.actor }} made a ${{ github.event_name }} to ${{ github.repository }}
+            ${{ github.event_name == 'watch' && format('{0} starred', github.actor) || format('{0} {1}', github.actor, github.event_name == 'push' && 'pushed to' || github.event_name == 'pull_request' && 'updated a pull request in' || 'published a release for') }} ${{ github.repository }}
             
-            Commit message: ${{ github.event.head_commit.message }}
+            ${{ github.event_name == 'push' && format('Commit message: {0}', github.event.head_commit.message) || github.event_name == 'pull_request' && format('Pull Request: {0}', github.event.pull_request.title) || github.event_name == 'release' && format('Release: {0}', github.event.release.tag_name) || 'New star added to the repository!' }}
             
-            Repository: ${{ github.repository }}
-            
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            ${{ github.event_name == 'push' && format('See changes: https://github.com/{0}/commit/{1}', github.repository, github.sha) || github.event_name == 'pull_request' && format('See pull request: {0}', github.event.pull_request.html_url) || github.event_name == 'release' && format('See release: {0}', github.event.release.html_url) || format('Repository: https://github.com/{0}', github.repository) }}
+
+            ${{ github.event_name == 'watch' && format('Total stars: {0}', github.repository.stargazers_count) || '' }}
