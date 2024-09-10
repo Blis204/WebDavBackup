@@ -108,15 +108,41 @@ public class BackupCommand implements CommandExecutor {
                     backupDirectory(directory, zipFile, currentBossBar);
                     player.sendMessage(String.format("Directory §l%s§r has been backed up successfully.", directoryName));
                     // Upload the backup file to the WebDAV server
+
+
                     if (webDAVUtils != null) {
-                        boolean deleteLocalBackup = config.getBoolean("delete-local-backup", false);
-                        currentBossBar.setTitle("Uploading...");
-                        webDAVUtils.uploadFile(zipFile);
-                        if (deleteLocalBackup) {
-                            if(zipFile.delete()) {
-                                player.sendMessage("Deleted local backup.");
+                        final BossBar uploadBossBar = Bukkit.createBossBar("Uploading...", BarColor.GREEN, BarStyle.SOLID);
+                        uploadBossBar.addPlayer(player);
+                        uploadBossBar.setVisible(true);
+
+                        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                            try {
+                                webDAVUtils.uploadFile(zipFile);
+
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    player.sendMessage(String.format("Backup for §l%s§r has been uploaded to WebDAV.", directoryName));
+                                    uploadBossBar.setProgress(1.0);
+                                    uploadBossBar.setTitle("Upload Complete");
+                                    uploadBossBar.setVisible(false);
+                                });
+
+                                boolean deleteLocalBackup = config.getBoolean("delete-local-backup", false);
+                                if (deleteLocalBackup) {
+                                    if(zipFile.delete()) {
+                                        Bukkit.getScheduler().runTask(plugin, () -> {
+                                            player.sendMessage("Deleted local backup.");
+                                        });
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    player.sendMessage("An error occurred while uploading the backup.");
+                                    uploadBossBar.setTitle("Upload Failed");
+                                    uploadBossBar.setVisible(false);
+                                });
                             }
-                        }
+                        });
                     }
 
                     // Update the player on the main thread
