@@ -111,7 +111,7 @@ public class BackupCommand implements CommandExecutor {
 
 
                     if (webDAVUtils != null) {
-                        final BossBar uploadBossBar = Bukkit.createBossBar("Uploading...", BarColor.GREEN, BarStyle.SOLID);
+                        final BossBar uploadBossBar = Bukkit.createBossBar(String.format("Uploading §l%s§r...", directoryName), BarColor.GREEN, BarStyle.SOLID);
                         uploadBossBar.addPlayer(player);
                         uploadBossBar.setVisible(true);
 
