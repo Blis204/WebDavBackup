@@ -147,10 +147,6 @@ public class BackupCommand implements CommandExecutor {
 
                     // Update the player on the main thread
                     Bukkit.getScheduler().runTask(plugin, () -> {
-
-                        if (webDAVUtils != null) {
-                            player.sendMessage(String.format("Backup for §l%s§r has been uploaded to WebDAV.", directoryName));
-                        }
                         currentBossBar.setProgress(1.0);
                         currentBossBar.setTitle("Backup Complete");
                         currentBossBar.setVisible(false);
