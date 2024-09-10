@@ -80,6 +80,8 @@ public class BackupCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        File configFile = new File(plugin.getDataFolder(), "config.yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         if (!(commandSender instanceof Player)) {
             commandSender.sendMessage("This command can only be executed by a player.");
             return true;
@@ -107,8 +109,14 @@ public class BackupCommand implements CommandExecutor {
                     player.sendMessage(String.format("Directory §l%s§r has been backed up successfully.", directoryName));
                     // Upload the backup file to the WebDAV server
                     if (webDAVUtils != null) {
+                        boolean deleteLocalBackup = config.getBoolean("delete-local-backup", false);
                         currentBossBar.setTitle("Uploading...");
                         webDAVUtils.uploadFile(zipFile);
+                        if (deleteLocalBackup) {
+                            if(zipFile.delete()) {
+                                player.sendMessage("Deleted local backup.");
+                            }
+                        }
                     }
 
                     // Update the player on the main thread
