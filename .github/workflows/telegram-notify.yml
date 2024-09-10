@@ -14,6 +14,15 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
+      - name: Get star count
+        if: github.event_name == 'watch'
+        id: stars
+        run: |
+          stars=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}" \
+            | jq .stargazers_count)
+          echo "count=$stars" >> $GITHUB_OUTPUT
+
       - name: Send Telegram Message
         uses: appleboy/telegram-action@master
         with:
@@ -24,6 +33,6 @@ jobs:
             
             ${{ github.event_name == 'push' && format('Commit message: {0}', github.event.head_commit.message) || github.event_name == 'pull_request' && format('Pull Request: {0}', github.event.pull_request.title) || github.event_name == 'release' && format('Release: {0}', github.event.release.tag_name) || 'New star added to the repository!' }}
             
-            ${{ github.event_name == 'push' && format('See changes: https://github.com/{0}/commit/{1}', github.repository, github.sha) || github.event_name == 'pull_request' && format('See pull request: {0}', github.event.pull_request.html_url) || github.event_name == 'release' && format('See release: {0}', github.event.release.html_url) || format('Repository: https://github.com/{0}', github.repository) }}
+            ${{ github.event_name == 'push' && format('See changes: https://github.com/{0}/commit/{1}', github.repository, github.sha) || github.event_name == 'pull_request' && format('See pull request: {0}', github.event.pull_request.html_url) || github.event_name == 'release' && format('See release: {0}', github.event.release.html_url) || '' }}
 
-            ${{ github.event_name == 'watch' && format('Total stars: {0}', github.repository.stargazers_count) || '' }}
+            ${{ github.event_name == 'watch' && format('Total stars: {0}', steps.stars.outputs.count) || '' }}
