@@ -1,5 +1,5 @@
 name: Telegram Notification
-on: [push, pull_request, release]
+on: [push, pull_request, release, star]
 
 jobs:
   notify:
