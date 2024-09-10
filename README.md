@@ -30,6 +30,7 @@
 backup-directories:
 - world
 - plugins
+delete-local-backup: false
 enable-webdav: false
 webdav-url: https://your-webdav-server.com/path/
 webdav-username: your_username
