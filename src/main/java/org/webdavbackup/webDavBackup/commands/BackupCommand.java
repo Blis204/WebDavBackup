@@ -67,6 +67,7 @@ public class BackupCommand implements CommandExecutor {
             configFile.createNewFile();
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
             config.set("backup-directories", Arrays.asList("world", "plugins"));
+            config.set("delete-local-backup", false);
             config.set("enable-webdav", false);
             config.set("webdav-url", "https://your-webdav-server.com/path/");
             config.set("webdav-username", "your_username");
@@ -108,7 +109,6 @@ public class BackupCommand implements CommandExecutor {
                     if (webDAVUtils != null) {
                         currentBossBar.setTitle("Uploading...");
                         webDAVUtils.uploadFile(zipFile);
-                        webDAVUtils.deleteOldBackups(directoryName);
                     }
 
                     // Update the player on the main thread

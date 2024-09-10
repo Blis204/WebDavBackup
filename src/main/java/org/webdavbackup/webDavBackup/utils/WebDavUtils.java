@@ -30,24 +30,4 @@ public class WebDavUtils {
             Bukkit.getLogger().severe("Failed to upload file to WebDAV: " + e.getMessage());
         }
     }
-
-    public void deleteOldBackups(String directoryName) {
-        try {
-            Sardine sardine = SardineFactory.begin(webDAVUsername, webDAVPassword);
-            String remoteDirectoryPath = String.format("%s/%s_backup_", webDAVUrl, directoryName);
-            List<DavResource> resources = sardine.list(remoteDirectoryPath);
-
-            // Sort the resources by modification time in ascending order
-            resources.sort(Comparator.comparing(DavResource::getModified));
-
-            // Delete old backup files, keeping the latest ones
-            int maxBackupsToKeep = 5; // Adjust this value to control the number of backups to keep
-            for (int i = 0; i < resources.size() - maxBackupsToKeep; i++) {
-                DavResource resource = resources.get(i);
-                sardine.delete(resource.getPath());
-            }
-        } catch (IOException e) {
-            Bukkit.getLogger().severe("Failed to delete old backups from WebDAV: " + e.getMessage());
-        }
-    }
 }
