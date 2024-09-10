@@ -95,12 +95,12 @@ public class BackupCommand implements CommandExecutor {
                 for (String directoryName : backupDirectories) {
                     File directory = new File(plugin.getServer().getWorldContainer(), directoryName);
                     if (!directory.exists() || !directory.isDirectory()) {
-                        player.sendMessage(String.format("Directory '%s' does not exist. Skipping backup.", directoryName));
+                        player.sendMessage(String.format("Directory §l%s§r does not exist. Skipping backup.", directoryName));
                         continue;
                     }
 
                     // Create and show the boss bar for the current directory
-                    BossBar currentBossBar = Bukkit.createBossBar(String.format("Backing up '%s'", directoryName), BarColor.BLUE, BarStyle.SOLID);
+                    BossBar currentBossBar = Bukkit.createBossBar(String.format("Backing up §l%s§r", directoryName), BarColor.BLUE, BarStyle.SOLID);
                     currentBossBar.addPlayer(player);
                     currentBossBar.setVisible(true);
 
@@ -120,7 +120,7 @@ public class BackupCommand implements CommandExecutor {
                                 webDAVUtils.uploadFile(zipFile);
 
                                 Bukkit.getScheduler().runTask(plugin, () -> {
-                                    player.sendMessage(String.format("Backup for §l%s§r has been uploaded to WebDAV.", directoryName));
+                                    player.sendMessage(String.format("Backup for §l%s§r has been uploaded!", directoryName));
                                     uploadBossBar.setProgress(1.0);
                                     uploadBossBar.setTitle("Upload Complete");
                                     uploadBossBar.setVisible(false);
