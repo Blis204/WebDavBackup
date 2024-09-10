@@ -5,7 +5,7 @@
 
 **WebDavBackup** is a Minecraft plugin with which you can easily create backups and upload them directly to your server trough WebDAV
 
-## Features
+## Current and Upcoming Features
 
 - [x] Backup Creation 📦
 - [x] Backup Uploading 📤
