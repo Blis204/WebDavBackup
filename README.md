@@ -14,8 +14,8 @@
 - [x] Backup Uploading (Beta) 📤
 - [x] Folder Config 📁
 - [x] Realtime Progress Bar ⏳
+- [x] Delete Local Backups 🗑️
 - [ ] Scheduled Uploads 🕒
-- [ ] Delete Local Backups 🗑️
 - [ ] Set How Many Backups to Keep on Server and Client Side ⚙️
 - [ ] Reload Command 🔄
 
