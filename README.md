@@ -2,7 +2,7 @@
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/Blis204/WebDavBackup)
 
-![a-cute-cartoon-furry-wolf-with-a-green-hat-is-stan-fTmkbn_1QjCo_DUbPYsLrw-HTQGY0TKQkKdFQ277HeafA](https://github.com/user-attachments/assets/c0d3e8ed-a578-44b9-9f4c-f961ad2e146c)
+![WebDAVBackup](https://github.com/user-attachments/assets/49586ea5-1b74-490f-ad6a-045f7fbdc150)
 
 # WebDavBackup
 
@@ -37,6 +37,3 @@ enable-webdav: false
 webdav-url: https://your-webdav-server.com/path/
 webdav-username: your_username
 webdav-password: your_password
-
-
-
