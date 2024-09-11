@@ -1,6 +1,7 @@
 ![WebDAVBackup](https://github.com/user-attachments/assets/49586ea5-1b74-490f-ad6a-045f7fbdc150)
-![GitHub last commit](https://img.shields.io/github/last-commit/Blis204/WebDavBackup)
 
+[![Join my Discord](https://i.imgur.com/ZPqYZqJ.jpeg)](https://discord.gg/zRHsbRAUbh)\
+![GitHub last commit](https://img.shields.io/github/last-commit/Blis204/WebDavBackup)
 # WebDavBackup
 
 **WebDavBackup** is a Minecraft plugin with which you can easily create backups and upload them directly to your server trough WebDAV
@@ -37,3 +38,5 @@ enable-webdav: false
 webdav-url: https://your-webdav-server.com/path/
 webdav-username: your_username
 webdav-password: your_password
+
+
