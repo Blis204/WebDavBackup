@@ -1,6 +1,4 @@
 ![WebDAVBackup](https://github.com/user-attachments/assets/49586ea5-1b74-490f-ad6a-045f7fbdc150)
-
-[![Join my Discord](https://i.imgur.com/ZPqYZqJ.jpeg)](https://discord.gg/zRHsbRAUbh)\
 ![GitHub last commit](https://img.shields.io/github/last-commit/Blis204/WebDavBackup)
 # WebDavBackup
 
@@ -38,5 +36,6 @@ enable-webdav: false
 webdav-url: https://your-webdav-server.com/path/
 webdav-username: your_username
 webdav-password: your_password
+```
 
-
+[![Join my Discord](https://i.imgur.com/ZPqYZqJ.jpeg)](https://discord.gg/zRHsbRAUbh)
