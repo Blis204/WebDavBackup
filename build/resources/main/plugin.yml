@@ -1,5 +1,5 @@
 name: WebDavBackup
-version: 'v1.2.4-beta'
+version: 'v1.2.5-beta'
 main: org.webdavbackup.webDavBackup.WebDavBackup
 api-version: '1.20'
 commands:

@@ -168,7 +168,8 @@ public class BackupCommand implements CommandExecutor {
         long totalFiles = Files.walk(source.toPath())
                 .filter(path -> !Files.isDirectory(path))
                 .filter(path -> !path.toFile().getName().endsWith(".mcfunction"))
-                .filter(path -> !isBackupZip(path, zipFile)) // Filter out ZIP files that are currently being generated
+                .filter(path -> !path.toFile().getName().equals("session.lock"))
+                .filter(path -> !isBackupZip(path, zipFile))
                 .count();
         final long[] copiedFiles = {0};
 
@@ -177,7 +178,8 @@ public class BackupCommand implements CommandExecutor {
             Files.walk(source.toPath())
                     .filter(path -> !Files.isDirectory(path))
                     .filter(path -> !path.toFile().getName().endsWith(".mcfunction"))
-                    .filter(path -> !isBackupZip(path, zipFile)) // Again, filter out ZIP files
+                    .filter(path -> !path.toFile().getName().equals("session.lock"))
+                    .filter(path -> !isBackupZip(path, zipFile))
                     .forEach(path -> {
                         try {
                             String entryName = source.toPath().relativize(path).toString();
@@ -189,7 +191,6 @@ public class BackupCommand implements CommandExecutor {
                             updateBossBar(bossBar, copiedFiles[0], totalFiles, source.getName());
                             zos.closeEntry();
                         } catch (IOException e) {
-                            // Log and continue with the next file
                             Bukkit.getLogger().warning("Failed to backup file: " + path + " due to " + e.getMessage());
                         }
                     });
