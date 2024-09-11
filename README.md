@@ -12,7 +12,7 @@
 - [x] Folder Config 📁
 - [x] Realtime Progress Bar ⏳
 - [x] Delete Local Backups 🗑️
-- [ ] Scheduled Backups 🕒
+- [x] Scheduled Backups 🕒
 - [ ] Set How Many Backups to Keep on Server and Client Side ⚙️
 - [ ] Reload Command 🔄
 - [ ] Discord Integration 🛡️
@@ -32,6 +32,7 @@ backup-directories:
 - world
 - plugins
 delete-local-backup: false
+backup-interval-minutes: 60
 enable-webdav: false
 webdav-url: https://your-webdav-server.com/path/
 webdav-username: your_username
