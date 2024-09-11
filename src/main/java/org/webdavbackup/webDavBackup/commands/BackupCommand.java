@@ -77,6 +77,7 @@ public class BackupCommand implements CommandExecutor {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
             config.set("backup-directories", Arrays.asList("world", "plugins"));
             config.set("delete-local-backup", false);
+            config.set("backup-interval-minutes", 60);
             config.set("enable-webdav", false);
             config.set("webdav-url", "https://your-webdav-server.com/path/");
             config.set("webdav-username", "your_username");
@@ -219,7 +220,7 @@ public class BackupCommand implements CommandExecutor {
                 bossBar.setTitle(String.format("Backing up '%s': %.2f%%", directoryName, percentage * 100));
             }
             if (progress % 1000 == 0 || progress == total) {
-                sendMessage(sender, String.format("Backed up $l%s§r (%d/%d files)", directoryName,  progress, total));
+                sendMessage(sender, String.format("Backed up §l%s§r (%d/%d files)", directoryName,  progress, total));
             }
         });
     }
