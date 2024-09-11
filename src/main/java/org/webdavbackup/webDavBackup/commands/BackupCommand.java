@@ -23,7 +23,16 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
+
 public class BackupCommand implements CommandExecutor {
+
+    static {
+        Logger logger = LogManager.getLogger("org.apache.http.client.protocol.ResponseProcessCookies");
+        ((org.apache.logging.log4j.core.Logger) logger).setLevel(Level.ERROR);
+    }
 
     private final JavaPlugin plugin;
     private List<String> backupDirectories;
