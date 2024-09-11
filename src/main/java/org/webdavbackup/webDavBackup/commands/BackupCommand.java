@@ -88,15 +88,9 @@ public class BackupCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        if (!(commandSender instanceof Player)) {
-            commandSender.sendMessage("This command can only be executed by a player.");
-            return true;
-        }
-
-        Player player = (Player) commandSender;
 
         // Run the backup process asynchronously
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -104,67 +98,78 @@ public class BackupCommand implements CommandExecutor {
                 for (String directoryName : backupDirectories) {
                     File directory = new File(plugin.getServer().getWorldContainer(), directoryName);
                     if (!directory.exists() || !directory.isDirectory()) {
-                        player.sendMessage(String.format("Directory §l%s§r does not exist. Skipping backup.", directoryName));
+                        sendMessage(sender, String.format("Directory §l%s§r does not exist. Skipping backup.", directoryName));
                         continue;
                     }
 
-                    // Create and show the boss bar for the current directory
-                    BossBar currentBossBar = Bukkit.createBossBar(String.format("Backing up §l%s§r", directoryName), BarColor.BLUE, BarStyle.SOLID);
-                    currentBossBar.addPlayer(player);
-                    currentBossBar.setVisible(true);
+                    BossBar currentBossBar;
+                    if (sender instanceof Player) {
+                        currentBossBar = Bukkit.createBossBar(String.format("Backing up §l%s§r", directoryName), BarColor.BLUE, BarStyle.SOLID);
+                        currentBossBar.addPlayer((Player) sender);
+                        currentBossBar.setVisible(true);
+                    } else {
+                        currentBossBar = null;
+                    }
 
                     File zipFile = new File(plugin.getDataFolder(), String.format("%s_backup_%s.zip", directoryName, getTimestamp()));
-                    backupDirectory(directory, zipFile, currentBossBar);
-                    player.sendMessage(String.format("Directory §l%s§r has been backed up successfully.", directoryName));
-                    // Upload the backup file to the WebDAV server
-
+                    backupDirectory(directory, zipFile, currentBossBar, sender);
+                    sendMessage(sender, String.format("Directory §l%s§r has been backed up successfully.", directoryName));
 
                     if (webDAVUtils != null) {
-                        final BossBar uploadBossBar = Bukkit.createBossBar(String.format("Uploading §l%s§r...", directoryName), BarColor.GREEN, BarStyle.SOLID);
-                        uploadBossBar.addPlayer(player);
-                        uploadBossBar.setVisible(true);
+                        final BossBar uploadBossBar = (sender instanceof Player) ?
+                                Bukkit.createBossBar(String.format("Uploading §l%s§r...", directoryName), BarColor.GREEN, BarStyle.SOLID) : null;
+                        if (uploadBossBar != null) {
+                            uploadBossBar.addPlayer((Player) sender);
+                            uploadBossBar.setVisible(true);
+                        }
 
                         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                             try {
                                 webDAVUtils.uploadFile(zipFile);
 
                                 Bukkit.getScheduler().runTask(plugin, () -> {
-                                    player.sendMessage(String.format("Backup for §l%s§r has been uploaded!", directoryName));
-                                    uploadBossBar.setProgress(1.0);
-                                    uploadBossBar.setTitle("Upload Complete");
-                                    uploadBossBar.setVisible(false);
+                                    sendMessage(sender, String.format("Backup for §l%s§r has been uploaded!", directoryName));
+                                    if (uploadBossBar != null) {
+                                        uploadBossBar.setProgress(1.0);
+                                        uploadBossBar.setTitle("Upload Complete");
+                                        uploadBossBar.setVisible(false);
+                                    }
                                 });
 
                                 boolean deleteLocalBackup = config.getBoolean("delete-local-backup", false);
                                 if (deleteLocalBackup) {
                                     if(zipFile.delete()) {
                                         Bukkit.getScheduler().runTask(plugin, () -> {
-                                            player.sendMessage("Deleted local backup.");
+                                            sendMessage(sender, "Deleted local backup.");
                                         });
                                     }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Bukkit.getScheduler().runTask(plugin, () -> {
-                                    player.sendMessage("An error occurred while uploading the backup.");
-                                    uploadBossBar.setTitle("Upload Failed");
-                                    uploadBossBar.setVisible(false);
+                                    sendMessage(sender, "An error occurred while uploading the backup.");
+                                    if (uploadBossBar != null) {
+                                        uploadBossBar.setTitle("Upload Failed");
+                                        uploadBossBar.setVisible(false);
+                                    }
                                 });
                             }
                         });
                     }
 
-                    // Update the player on the main thread
+                    // Update on the main thread
                     Bukkit.getScheduler().runTask(plugin, () -> {
-                        currentBossBar.setProgress(1.0);
-                        currentBossBar.setTitle("Backup Complete");
-                        currentBossBar.setVisible(false);
+                        if (currentBossBar != null) {
+                            currentBossBar.setProgress(1.0);
+                            currentBossBar.setTitle("Backup Complete");
+                            currentBossBar.setVisible(false);
+                        }
                     });
                 }
             } catch (IOException e) {
-                // Update the player on the main thread
+                // Update on the main thread
                 Bukkit.getScheduler().runTask(plugin, () -> {
-                    player.sendMessage("An error occurred while backing up the directories.");
+                    sendMessage(sender, "An error occurred while backing up the directories.");
                 });
                 e.printStackTrace();
             }
@@ -173,7 +178,7 @@ public class BackupCommand implements CommandExecutor {
         return true;
     }
 
-    private void backupDirectory(File source, File zipFile, BossBar bossBar) throws IOException {
+    private void backupDirectory(File source, File zipFile, BossBar bossBar, CommandSender sender) throws IOException {
         long totalFiles = Files.walk(source.toPath())
                 .filter(path -> !Files.isDirectory(path))
                 .filter(path -> !path.toFile().getName().endsWith(".mcfunction"))
@@ -197,7 +202,7 @@ public class BackupCommand implements CommandExecutor {
                                 is.transferTo(zos);
                             }
                             copiedFiles[0]++;
-                            updateBossBar(bossBar, copiedFiles[0], totalFiles, source.getName());
+                            updateBossBar(bossBar, copiedFiles[0], totalFiles, source.getName(), sender);
                             zos.closeEntry();
                         } catch (IOException e) {
                             Bukkit.getLogger().warning("Failed to backup file: " + path + " due to " + e.getMessage());
@@ -206,17 +211,30 @@ public class BackupCommand implements CommandExecutor {
         }
     }
 
+    private void updateBossBar(BossBar bossBar, long progress, long total, String directoryName, CommandSender sender) {
+        double percentage = (double) progress / total;
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (bossBar != null) {
+                bossBar.setProgress(percentage);
+                bossBar.setTitle(String.format("Backing up '%s': %.2f%%", directoryName, percentage * 100));
+            }
+            if (progress % 1000 == 0 || progress == total) {
+                sendMessage(sender, String.format("Backed up $l%s§r (%d/%d files)", directoryName,  progress, total));
+            }
+        });
+    }
+
+    private void sendMessage(CommandSender sender, String message) {
+        if (sender instanceof Player) {
+            sender.sendMessage(message);
+        } else {
+            plugin.getLogger().info(message);
+        }
+    }
+
     private boolean isBackupZip(Path path, File zipFile) {
         // Check if the file is a ZIP file and matches the backup naming pattern
         return path.toFile().getName().endsWith(".zip") && path.toFile().getName().contains("_backup_");
-    }
-
-    private void updateBossBar(BossBar bossBar, long progress, long total, String directoryName) {
-        double percentage = (double) progress / total;
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            bossBar.setProgress(percentage);
-            bossBar.setTitle(String.format("Backing up '%s': %.2f%%", directoryName, percentage * 100));
-        });
     }
 
     private String getTimestamp() {
