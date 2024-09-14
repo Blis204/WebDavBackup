@@ -219,7 +219,7 @@ public class BackupCommand implements CommandExecutor {
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (bossBar != null) {
                 bossBar.setProgress(percentage);
-                bossBar.setTitle(String.format("Backing up '%s': %.2f%%", directoryName, percentage * 100));
+                bossBar.setTitle(String.format("Backing up §l%s§r: %.2f%%", directoryName, percentage * 100));
             }
             if (progress % 1000 == 0 || progress == total) {
                 sendMessage(sender, String.format("Backed up §l%s§r (%d/%d files)", directoryName,  progress, total));
