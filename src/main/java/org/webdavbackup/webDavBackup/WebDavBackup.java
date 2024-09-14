@@ -8,8 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.webdavbackup.webDavBackup.commands.BackupCommand;
 
 import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Objects;
 
 public final class WebDavBackup extends JavaPlugin {
 
@@ -17,10 +16,9 @@ public final class WebDavBackup extends JavaPlugin {
     public void onEnable() {
         File configFile;
         FileConfiguration config;
-        Timer timer;
 
         // Plugin startup logic
-        this.getCommand("backup").setExecutor(new BackupCommand(this));
+        Objects.requireNonNull(this.getCommand("backup")).setExecutor(new BackupCommand(this));
 
         // Scheduled backups
         // Load config
@@ -34,16 +32,22 @@ public final class WebDavBackup extends JavaPlugin {
         // Execute the backup command every intervalMinutes minutes
         int intervalMinutes = config.getInt("backup-interval-minutes");
         long intervalTicks = intervalMinutes * 60 * 20L; // Convert minutes to ticks
-
+        boolean autoBackup = config.getBoolean("auto-backup");
+        boolean onlyBackupWhenPlayersOnline = config.getBoolean("only-backup-when-players-online");
         new BukkitRunnable() {
             @Override
             public void run() {
                 try {
                     // Schedule the command execution on the main thread
-                    Bukkit.getScheduler().runTask(WebDavBackup.this, () -> {
-                        Bukkit.getLogger().info("Running scheduled backup...");
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "backup");
-                    });
+                    if (autoBackup) {
+                        if (!onlyBackupWhenPlayersOnline || !Bukkit.getOnlinePlayers().isEmpty()) {
+                            Bukkit.getScheduler().runTask(WebDavBackup.this, () -> {
+                                Bukkit.getLogger().info("Running scheduled backup...");
+                                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "backup");
+                            });
+                        }
+
+                    }
                 } catch (Exception e) {
                     getLogger().severe("Failed to execute scheduled backup command: " + e.getMessage());
                 }

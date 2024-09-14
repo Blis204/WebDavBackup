@@ -1,13 +1,9 @@
 name: WebDavBackup
-version: 'v1.3.2-beta'
+version: 'v1.2.0'
 main: org.webdavbackup.webDavBackup.WebDavBackup
 api-version: '1.20'
 commands:
   backup:
     description: Creates a backup of the server
     usage: /backup
-    permission: myPlugin.backup
-  reloadconfig:
-    description: Reloads the configuration file
-    usage: /reloadconfig
-    permission: myPlugin.reloadconfig
+    permission: webdavbackup.backup

@@ -77,7 +77,9 @@ public class BackupCommand implements CommandExecutor {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
             config.set("backup-directories", Arrays.asList("world", "plugins"));
             config.set("delete-local-backup", false);
-            config.set("backup-interval-minutes", 60);
+            config.set("auto-backup", false);
+            config.set("only-backup-when-players-online", false);
+            config.set("backup-interval-minutes", 720);
             config.set("enable-webdav", false);
             config.set("webdav-url", "https://your-webdav-server.com/path/");
             config.set("webdav-username", "your_username");
