@@ -39,5 +39,3 @@ webdav-url: https://your-webdav-server.com/path/
 webdav-username: your_username
 webdav-password: your_password
 ```
-
-[![Join my Discord](https://i.imgur.com/ZPqYZqJ.jpeg)](https://discord.gg/zRHsbRAUbh)
