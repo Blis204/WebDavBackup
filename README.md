@@ -31,7 +31,7 @@ backup-directories:
 - world
 - plugins
 delete-local-backup: false
-auto-backup: true
+auto-backup: false
 only-backup-when-players-online: false
 backup-interval-minutes: 60
 enable-webdav: false
